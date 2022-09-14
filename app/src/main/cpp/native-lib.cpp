@@ -129,8 +129,11 @@ Java_cc_dewdrop_ffplayer_utils_FFUtils_playVideo(JNIEnv *env, jclass type, jstri
 
     // open video file
     ALOGI("Open video file");
-    if (avformat_open_input(&formatContext, videoPath, NULL, NULL) != 0) {
-        ALOGE("Cannot open video file: %s\n", videoPath);
+    char buf[1024] = {0};
+    int err_code = avformat_open_input(&formatContext, videoPath, NULL, NULL);
+    if (err_code != 0) {
+        av_strerror(err_code, buf, 1024);
+        ALOGE("Cannot open video file: %s, err: %s\n", videoPath, buf);
         return;
     }
 
